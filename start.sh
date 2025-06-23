@@ -8,7 +8,7 @@ if [ ! -f pb_data/data.db ]; then
   PB_PID=$!
   sleep 3
 
-  ./pocketbase admin create your@email.com strongpassword --name Admin
+  ./pocketbase superuser create your@email.com strongpassword --name Admin
 
   kill $PB_PID
   sleep 2
