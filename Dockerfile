@@ -1,24 +1,28 @@
-FROM alpine:latest
+# Step 1: Use Go image to build
+FROM golang:1.20-alpine AS builder
 
-# Install required packages
-RUN apk add --no-cache curl unzip libc6-compat
+RUN apk add --no-cache git
 
-# Set working directory
 WORKDIR /app
 
-# Download PocketBase binary (adjust version as needed)
-RUN curl -L https://github.com/pocketbase/pocketbase/releases/download/v0.28.4/pocketbase_0.28.4_linux_amd64.zip -o pb.zip && \
-    unzip pb.zip && \
-    rm pb.zip && \
-    chmod +x pocketbase
+COPY . .
 
-# Copy start script and entrypoint
-COPY start.sh /app/start.sh
-COPY entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/start.sh /app/entrypoint.sh
+RUN go mod tidy
+RUN go build -o pocketbase .
 
-# Expose port
+# Step 2: Use clean Alpine for running
+FROM alpine:latest
+
+RUN apk add --no-cache libc6-compat curl
+
+WORKDIR /app
+
+COPY --from=builder /app/pocketbase ./pocketbase
+COPY start.sh ./start.sh
+COPY entrypoint.sh ./entrypoint.sh
+
+RUN chmod +x ./start.sh ./entrypoint.sh
+
 EXPOSE 8090
 
-# Run entrypoint
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
