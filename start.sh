@@ -8,7 +8,7 @@ if [ ! -f pb_data/data.db ]; then
   PB_PID=$!
   sleep 3
 
-  ./pocketbase superuser create sohamasodekar1981@edunexus.com Soham@1234
+  ./pocketbase superuser create sohamasodekar1981@gmail.com Soham@1234
 
   kill $PB_PID
   sleep 2
