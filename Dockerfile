@@ -7,7 +7,7 @@ RUN apk add --no-cache curl unzip libc6-compat
 WORKDIR /app
 
 # Download PocketBase binary (adjust version as needed)
-RUN curl -L https://github.com/pocketbase/pocketbase/releases/download/v0.28.4/pocketbase_0.28.4_linux_amd64.zip -o pb.zip && \
+RUN curl -L https://github.com/pocketbase/pocketbase/releases/download/v0.29.0/pocketbase_0.29.0_linux_amd64.zip -o pb.zip && \
     unzip pb.zip && \
     rm pb.zip && \
     chmod +x pocketbase
